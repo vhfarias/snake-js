@@ -2,7 +2,8 @@ const Snake = function(options){
     const validOptions = {
         rows: options.rows || 20,
         columns: options.columns ||20,
-        size: options.size || 10
+        size: options.size || 10,
+        wrap: false
     }
     const colors = {
         snake: '#229922',
@@ -16,16 +17,23 @@ const Snake = function(options){
     
     let snake = {
         facing: "up",
-        body: []
+        body: [],
+        grow: false,
+        move: function(destinationIndex){
+            snake.body.unshift(destinationIndex);
+            if (!snake.grow){
+                snake.body.pop();
+            }
+        }
     }
 
     let apple = {
+        index: -1,
         randomize: function(){
             const length = validOptions.columns * validOptions.rows;
             apple.index = Math.floor(Math.random() * length);
             //TODO: check if space is empty (flag + while loop?)
-        },
-        index: -1
+        }
     };
 
     let grid = {
@@ -40,6 +48,10 @@ const Snake = function(options){
             getXY: function(index){
                 return [index % this.width,
                         Math.floor(index / this.width)]
+            },
+            getPixel: function(index){
+                let [x, y] = grid.getXY(index);
+                return [x * validOptions.size, y * validOptions.size];
             }
     }
 
@@ -53,8 +65,8 @@ const Snake = function(options){
     }
     const start = function(){
         //places the snake in the middle of the grid
-        let startX = Math.floor(0.5 * grid.width) + (grid.width % 2)
-        let startY = Math.floor(0.5 * grid.height) + (grid.height % 2)
+        let startX = Math.floor(0.5 * grid.width) + (grid.width % 2);
+        let startY = Math.floor(0.5 * grid.height) + (grid.height % 2);
         for(let i = 0; i < 3; i++){
             snake.body.push(grid.getIndex(startX,startY) + i * grid.width);
         }
@@ -62,10 +74,40 @@ const Snake = function(options){
         apple.randomize();
     }
     const stop = function(){
-
+        console.log("game stopped");
     }
     const update = function(){
-
+        let headIndex = snake.body[0];
+        let nextIndex = -1;
+        switch (snake.facing){
+            case "up":
+            nextIndex = headIndex - validOptions.columns;
+            break;
+            case "down":
+            nextIndex = headIndex + validOptions.columns;
+            break;
+            case "left":
+            nextIndex = headIndex - 1;
+            break;
+            case "right":
+            nextIndex = headIndex + 1;
+            break;
+        }
+        //check collisions
+        if (snake.body.indexOf(nextIndex) != -1){
+            console.log("game over");
+            stop();
+        }
+        //check boundaries
+        if (!validOptions.wrap){
+            let [x0, y0] = grid.getXY(nextIndex);
+            let [x1, y1] = grid.getXY(headIndex);
+            if(Math.abs(x1 - x0) > 1 || Math.abs(y1 - y0) > 1){
+                console.log("hit the wall");
+                stop();
+            }
+        }
+        snake.move(nextIndex);
     }
     const draw = function(){
         const width = validOptions.columns * validOptions.size;
@@ -77,10 +119,7 @@ const Snake = function(options){
         //draw snake
         context.fillStyle = colors.snake;
         for(let i = 0; i < snake.body.length; i++){
-            let [x, y] = grid.getXY(snake.body[i]);
-            x *= validOptions.size;
-            y *= validOptions.size;
-            console.log(x,y);
+            let [x, y] = grid.getPixel(snake.body[i]);
             context.fillRect(x + 1,
                              y + 1,
                              validOptions.size - 2,
@@ -97,12 +136,26 @@ const Snake = function(options){
                              validOptions.size - 2);
     }
     const loop = function(){
-
+        update();
+        draw();
     }
     const debug = function(){
         start();
         draw();
         console.log(snake.body);
+        update();
+        draw();
+        console.log(snake.body);
+
+        for (let i = 0; i < 20; i++){
+            window.setTimeout(dir => {
+                snake.facing = dir;
+                loop();
+            },1000 * i,"right");
+        }
+        
+        
+        
     }
 
     setup();
@@ -110,6 +163,6 @@ const Snake = function(options){
         validOptions,
         start,
         stop,
-        debug
+        debug,
     }
 };
