@@ -23,6 +23,8 @@ const Snake = function(options){
             snake.body.unshift(destinationIndex);
             if (!snake.grow){
                 snake.body.pop();
+            } else {
+                snake.grow = false;
             }
         }
     }
@@ -55,6 +57,38 @@ const Snake = function(options){
             }
     }
 
+    const inputHandler = function(e){
+        
+        console.log(e.code);
+        switch (e.code){
+            case "KeyUp":
+            case "KeyW":
+                if(snake.facing != "down"){
+                    snake.facing = "up";
+                }
+                break;
+            case "KeyDown":
+            case "KeyS":
+                if(snake.facing != "up"){
+                    snake.facing = "down";
+                }
+                break;
+            case "KeyLeft":
+            case "KeyA":
+                if(snake.facing != "right"){
+                    snake.facing = "left";
+                }
+                break;
+            case "KeyRight":
+            case "KeyD":
+                if(snake.facing != "left"){
+                    snake.facing = "right";
+                }
+                break;
+                
+        }
+    }
+
     const setup = function(){
         $canvas.className = "snakeCanvas";
         const $script = document.currentScript;
@@ -62,6 +96,8 @@ const Snake = function(options){
         $canvas.width = validOptions.columns * validOptions.size;
         $canvas.height = validOptions.rows * validOptions.size;
         $parent.insertBefore($canvas, $script);
+        $canvas.tabIndex = 1;
+        $canvas.addEventListener("keydown", inputHandler);
     }
     const start = function(){
         //places the snake in the middle of the grid
