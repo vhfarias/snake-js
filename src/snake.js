@@ -1,9 +1,9 @@
 const Snake = function(options){
     const validOptions = {
         rows: options.rows || 20,
-        columns: options.columns ||20,
+        columns: options.columns || 20,
         size: options.size || 10,
-        wrap: false
+        wrap: true
     }
     const colors = {
         snake: '#229922',
@@ -97,6 +97,7 @@ const Snake = function(options){
         $canvas.height = validOptions.rows * validOptions.size;
         $parent.insertBefore($canvas, $script);
         $canvas.tabIndex = 1;
+        $canvas.focus();
         $canvas.addEventListener("keydown", inputHandler);
     }
     const start = function(){
@@ -108,40 +109,56 @@ const Snake = function(options){
         }
         //place the first apple
         apple.randomize();
+        //set the game loop
     }
     const stop = function(){
         console.log("game stopped");
     }
     const update = function(){
         let headIndex = snake.body[0];
-        let nextIndex = -1;
+        let [nextX, nextY] = grid.getXY(headIndex);
         switch (snake.facing){
             case "up":
-            nextIndex = headIndex - validOptions.columns;
+            nextY--;
             break;
             case "down":
-            nextIndex = headIndex + validOptions.columns;
+            nextY++;
             break;
             case "left":
-            nextIndex = headIndex - 1;
+            nextX--;
             break;
             case "right":
-            nextIndex = headIndex + 1;
+            nextX++
             break;
         }
+        //check boundaries
+        if (!validOptions.wrap){
+            if (nextX < 0 || nextX >= validOptions.columns ||
+                nextY < 0 || nextY >= validOptions.rows){
+                    console.log("hit the wall");
+                    stop();
+                    return;
+                }
+        } else {
+            if (nextX >= validOptions.columns){
+                nextX = 0;
+            }
+            if (nextX < 0){
+                nextX = validOptions.columns - 1;
+            }
+            if (nextY >= validOptions.rows){
+                nextY = 0;
+            }
+            if (nextY < 0){
+                nextY = validOptions.rows - 1;
+            }
+        }
+        const nextIndex = grid.getIndex(nextX, nextY);
         //check collisions
         if (snake.body.indexOf(nextIndex) != -1){
             console.log("game over");
             stop();
-        }
-        //check boundaries
-        if (!validOptions.wrap){
-            let [x0, y0] = grid.getXY(nextIndex);
-            let [x1, y1] = grid.getXY(headIndex);
-            if(Math.abs(x1 - x0) > 1 || Math.abs(y1 - y0) > 1){
-                console.log("hit the wall");
-                stop();
-            }
+            return;
         }
         //check apple
         if (nextIndex === apple.index){
@@ -182,13 +199,12 @@ const Snake = function(options){
     const debug = function(){
         start();
         draw();
-        console.log(snake.body);
-        window.setInterval(loop,1000);
+        window.setInterval(loop,300);
     }
 
     setup();
     return {
-        validOptions,
+        //validOptions,
         start,
         stop,
         debug,
