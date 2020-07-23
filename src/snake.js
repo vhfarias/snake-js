@@ -61,25 +61,25 @@ const Snake = function(options){
         
         console.log(e.code);
         switch (e.code){
-            case "KeyUp":
+            case "ArrowUp":
             case "KeyW":
                 if(snake.facing != "down"){
                     snake.facing = "up";
                 }
                 break;
-            case "KeyDown":
+            case "ArrowDown":
             case "KeyS":
                 if(snake.facing != "up"){
                     snake.facing = "down";
                 }
                 break;
-            case "KeyLeft":
+            case "ArrowLeft":
             case "KeyA":
                 if(snake.facing != "right"){
                     snake.facing = "left";
                 }
                 break;
-            case "KeyRight":
+            case "ArrowRight":
             case "KeyD":
                 if(snake.facing != "left"){
                     snake.facing = "right";
@@ -177,24 +177,13 @@ const Snake = function(options){
     const loop = function(){
         update();
         draw();
+        console.log(snake.body);
     }
     const debug = function(){
         start();
         draw();
         console.log(snake.body);
-        update();
-        draw();
-        console.log(snake.body);
-
-        for (let i = 0; i < 20; i++){
-            window.setTimeout(dir => {
-                snake.facing = dir;
-                loop();
-            },1000 * i,"right");
-        }
-        
-        
-        
+        window.setInterval(loop,1000);
     }
 
     setup();
