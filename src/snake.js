@@ -107,6 +107,11 @@ const Snake = function(options){
                 stop();
             }
         }
+        //check apple
+        if (nextIndex === apple.index){
+            apple.randomize();
+            snake.grow = true;
+        }
         snake.move(nextIndex);
     }
     const draw = function(){
@@ -126,10 +131,8 @@ const Snake = function(options){
                              validOptions.size - 2);
         }
         //draw apple
-        let [x, y] = grid.getXY(apple.index);
-            x *= validOptions.size;
-            y *= validOptions.size;
-            context.fillStyle = colors.apple;
+        context.fillStyle = colors.apple;
+        let [x, y] = grid.getPixel(apple.index);
             context.fillRect(x + 1,
                              y + 1,
                              validOptions.size - 2,
