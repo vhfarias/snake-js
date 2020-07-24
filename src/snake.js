@@ -1,5 +1,5 @@
 const Snake = function(options){
-    const validOptions = {
+    const settings = {
         rows: options.rows || 20,
         columns: options.columns || 20,
         size: options.size || 10,
@@ -32,15 +32,15 @@ const Snake = function(options){
     let apple = {
         index: -1,
         randomize: function(){
-            const length = validOptions.columns * validOptions.rows;
+            const length = settings.columns * settings.rows;
             apple.index = Math.floor(Math.random() * length);
             //TODO: check if space is empty (flag + while loop?)
         }
     };
 
     let grid = {
-            width: validOptions.columns,
-            height: validOptions.rows,
+            width: settings.columns,
+            height: settings.rows,
             getIndex: function(x,y){
                 if(x >= 0 && x < this.width && y >= 0 && y < this.height){
                     return y * this.width + x;
@@ -53,7 +53,7 @@ const Snake = function(options){
             },
             getPixel: function(index){
                 let [x, y] = grid.getXY(index);
-                return [x * validOptions.size, y * validOptions.size];
+                return [x * settings.size, y * settings.size];
             }
     }
 
@@ -88,11 +88,11 @@ const Snake = function(options){
     }
 
     const setup = function(){
-        $canvas.className = "snakeCanvas";
         const $script = document.currentScript;
         const $parent = $script.parentElement || document.body;
-        $canvas.width = validOptions.columns * validOptions.size;
-        $canvas.height = validOptions.rows * validOptions.size;
+        $canvas.className = "snakeCanvas";
+        $canvas.width = settings.columns * settings.size;
+        $canvas.height = settings.rows * settings.size;
         $parent.insertBefore($canvas, $script);
         $canvas.tabIndex = 1;
         $canvas.focus();
@@ -130,25 +130,25 @@ const Snake = function(options){
             break;
         }
         //check boundaries
-        if (!validOptions.wrap){
-            if (nextX < 0 || nextX >= validOptions.columns ||
-                nextY < 0 || nextY >= validOptions.rows){
+        if (!settings.wrap){
+            if (nextX < 0 || nextX >= settings.columns ||
+                nextY < 0 || nextY >= settings.rows){
                     console.log("hit the wall");
                     stop();
                     return;
                 }
         } else {
-            if (nextX >= validOptions.columns){
+            if (nextX >= settings.columns){
                 nextX = 0;
             }
             if (nextX < 0){
-                nextX = validOptions.columns - 1;
+                nextX = settings.columns - 1;
             }
-            if (nextY >= validOptions.rows){
+            if (nextY >= settings.rows){
                 nextY = 0;
             }
             if (nextY < 0){
-                nextY = validOptions.rows - 1;
+                nextY = settings.rows - 1;
             }
         }
         const nextIndex = grid.getIndex(nextX, nextY);
@@ -166,8 +166,8 @@ const Snake = function(options){
         snake.move(nextIndex);
     }
     const draw = function(){
-        const width = validOptions.columns * validOptions.size;
-        const height = validOptions.rows * validOptions.size;
+        const width = settings.columns * settings.size;
+        const height = settings.rows * settings.size;
         context.save();
         //background
         context.fillStyle = colors.background;
@@ -178,16 +178,16 @@ const Snake = function(options){
             let [x, y] = grid.getPixel(snake.body[i]);
             context.fillRect(x + 1,
                              y + 1,
-                             validOptions.size - 2,
-                             validOptions.size - 2);
+                             settings.size - 2,
+                             settings.size - 2);
         }
         //draw apple
         context.fillStyle = colors.apple;
         let [x, y] = grid.getPixel(apple.index);
             context.fillRect(x + 1,
                              y + 1,
-                             validOptions.size - 2,
-                             validOptions.size - 2);
+                             settings.size - 2,
+                             settings.size - 2);
     }
     const loop = function(){
         update();
@@ -202,7 +202,7 @@ const Snake = function(options){
 
     setup();
     return {
-        //validOptions,
+        //settings,
         start,
         stop,
         debug,
