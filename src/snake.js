@@ -41,8 +41,25 @@ const Snake = function(options){
         index: -1,
         randomize: function(){
             const length = settings.columns * settings.rows;
-            apple.index = Math.floor(Math.random() * length);
-            //TODO: check if space is empty (flag + while loop?)
+            //creates a set with all grid spaces
+            let _grid = new Set();
+            for (let i = 0; i< length; i++){
+                _grid.add(i);
+            }
+            //creates a set with the spaces the snaeke is at
+            let _snake = new Set(snake.body);
+            //creates a set with the difference between sets
+            let _available = new Set(_grid);
+            for(let element of _snake){
+                if (_available.has(element)) {
+                    _available.delete(element);
+                }
+            }
+            //transforming the set into an array to access an index
+            _available = [..._available];
+            console.log(_available);
+            let _random = Math.floor(Math.random() * _available.length);
+            apple.index = _available[_random];
         }
     };
 
@@ -202,6 +219,7 @@ const Snake = function(options){
                              y + 1,
                              settings.size - 2,
                              settings.size - 2);
+        context.restore();
     }
     const loop = function(){
         update();
@@ -209,8 +227,6 @@ const Snake = function(options){
     }
     const debug = function(){
         start();
-        //draw();
-        //window.setInterval(loop,300);
     }
 
     setup();
