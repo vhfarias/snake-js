@@ -121,8 +121,7 @@ const Snake = function(options){
         $canvas.width = settings.columns * settings.size;
         $canvas.height = settings.rows * settings.size;
         $parent.insertBefore($canvas, $script);
-        $canvas.tabIndex = 1;
-        //$canvas.focus();
+        $canvas.tabIndex = 1;   //so the event can be added to the canvas itself
         $canvas.addEventListener("keydown", inputHandler);
     }
     
@@ -246,8 +245,6 @@ const Snake = function(options){
     reset();
 
     return {
-        start,
-        stop,
-        debug,
+        debug
     }
 };
