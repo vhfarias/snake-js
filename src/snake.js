@@ -17,11 +17,12 @@ const Snake = function(options){
         apple: '#AA0000',
         background: '#111111'
     }
-    let loopIntervalId = undefined;
-
+    
     const $canvas = document.createElement("canvas");
     const context = $canvas.getContext('2d');
-
+    let loopIntervalId = undefined;
+    let playerInput = "up";
+    let running = false;
     
     let snake = {
         facing: "up",
@@ -57,7 +58,6 @@ const Snake = function(options){
             }
             //transforming the set into an array to access an index
             _available = [..._available];
-            console.log(_available);
             let _random = Math.floor(Math.random() * _available.length);
             apple.index = _available[_random];
         }
@@ -87,27 +87,30 @@ const Snake = function(options){
             case "ArrowUp":
             case "KeyW":
                 if(snake.facing != "down"){
-                    snake.facing = "up";
+                    playerInput = "up";
                 }
                 break;
             case "ArrowDown":
             case "KeyS":
                 if(snake.facing != "up"){
-                    snake.facing = "down";
+                    playerInput = "down";
                 }
                 break;
             case "ArrowLeft":
             case "KeyA":
                 if(snake.facing != "right"){
-                    snake.facing = "left";
+                    playerInput = "left";
                 }
                 break;
             case "ArrowRight":
             case "KeyD":
                 if(snake.facing != "left"){
-                    snake.facing = "right";
+                    playerInput = "right";
                 }
                 break;
+        }
+        if(!running) {
+            start();
         }
     }
 
@@ -119,10 +122,11 @@ const Snake = function(options){
         $canvas.height = settings.rows * settings.size;
         $parent.insertBefore($canvas, $script);
         $canvas.tabIndex = 1;
-        $canvas.focus();
+        //$canvas.focus();
         $canvas.addEventListener("keydown", inputHandler);
     }
-    const start = function(){
+    
+    const reset = function(){
         //clear snake array if it already exists
         if (snake.body.length > 0){
             snake.body = [];
@@ -135,17 +139,26 @@ const Snake = function(options){
         }
         //place the first apple
         apple.randomize();
+        //draw everything
+        draw();
+    }
+    
+    const start = function(){
         //set the game loop
-        loopIntervalId = window.setInterval(loop, 300);
+        loopIntervalId = window.setInterval(loop, 200);
+        running = true;
     }
     const stop = function(){
-        console.log("game stopped");
         window.clearInterval(loopIntervalId);
-        window.setTimeout(start,1000);
+        running = false;
+        window.setTimeout(reset, 2000);
     }
     const update = function(){
+        //get next head position, starting from its current position
         let headIndex = snake.body[0];
         let [nextX, nextY] = grid.getXY(headIndex);
+        //check next direction from input
+        snake.facing = playerInput;
         switch (snake.facing){
             case "up":
             nextY--;
@@ -226,10 +239,12 @@ const Snake = function(options){
         draw();
     }
     const debug = function(){
-        start();
+        //start();
     }
 
     setup();
+    reset();
+
     return {
         start,
         stop,
