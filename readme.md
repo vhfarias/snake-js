@@ -21,9 +21,9 @@ A simple Snake game made from scratch using Javascript. The aim of this project 
 ```html
 <script>
     const options = {
+        size: 10,
         columns: 20,
         rows: 15,
-        size: 10,
         wrap: true
     }
     Snake(options)
@@ -37,5 +37,5 @@ A simple Snake game made from scratch using Javascript. The aim of this project 
 - _rows_: number of rows in the grid. (default 20)
 - _size_: number informing the size of the "pixel" the game draws. (default 30)
 - _speed_: game update speed in millisseconds. (default 300)
-- _wrap_: boolean informing wheter the snake wraps around the grid or not. (default true)
+- _wrap_: boolean informing whether the snake wraps around the grid or not. (default true)
 
