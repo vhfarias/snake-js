@@ -21,11 +21,11 @@ const Snake = function(options){
         grow: false,
         move: function(destinationIndex){
             snake.body.unshift(destinationIndex);
-            if (!snake.grow){
-                snake.body.pop();
-            } else {
+            if (snake.grow){
                 snake.grow = false;
+                return;
             }
+            snake.body.pop();
         }
     }
 
@@ -58,8 +58,6 @@ const Snake = function(options){
     }
 
     const inputHandler = function(e){
-        
-        console.log(e.code);
         switch (e.code){
             case "ArrowUp":
             case "KeyW":
@@ -104,7 +102,7 @@ const Snake = function(options){
         //places the snake in the middle of the grid
         let startX = Math.floor(0.5 * grid.width) + (grid.width % 2);
         let startY = Math.floor(0.5 * grid.height) + (grid.height % 2);
-        for(let i = 0; i < 3; i++){
+        for(let i = 0; i < 5; i++){
             snake.body.push(grid.getIndex(startX,startY) + i * grid.width);
         }
         //place the first apple
