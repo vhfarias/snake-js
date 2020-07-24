@@ -3,7 +3,8 @@ const Snake = function(options){
     const settings = {
         rows: 20,
         columns: 20,
-        size: 10,
+        size: 30,
+        speed: 300,
         wrap: true
     }
     //applying user overrides
@@ -144,7 +145,7 @@ const Snake = function(options){
     
     const start = function(){
         //set the game loop
-        loopIntervalId = window.setInterval(loop, 200);
+        loopIntervalId = window.setInterval(loop, settings.speed);
         running = true;
     }
     const stop = function(){
@@ -201,12 +202,17 @@ const Snake = function(options){
             stop();
             return;
         }
+        snake.move(nextIndex);
+        //check size (win condition)
+        if (snake.body.length === grid.width * grid.height) {
+            console.log("YOU WIN!");
+            stop();
+        }
         //check apple
         if (nextIndex === apple.index){
             apple.randomize();
             snake.grow = true;
         }
-        snake.move(nextIndex);
     }
     const draw = function(){
         const width = settings.columns * settings.size;
