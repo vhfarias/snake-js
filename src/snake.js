@@ -1,9 +1,16 @@
 const Snake = function(options){
+    //default settings
     const settings = {
-        rows: options.rows || 20,
-        columns: options.columns || 20,
-        size: options.size || 10,
+        rows: 20,
+        columns: 20,
+        size: 10,
         wrap: true
+    }
+    //applying user overrides
+    for (key in settings){
+        if (options.hasOwnProperty(key)){
+            settings[key] = options[key];
+        }
     }
     const colors = {
         snake: '#229922',
@@ -83,7 +90,6 @@ const Snake = function(options){
                     snake.facing = "right";
                 }
                 break;
-                
         }
     }
 
@@ -202,7 +208,6 @@ const Snake = function(options){
 
     setup();
     return {
-        //settings,
         start,
         stop,
         debug,
