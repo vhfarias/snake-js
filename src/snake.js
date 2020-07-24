@@ -17,6 +17,7 @@ const Snake = function(options){
         apple: '#AA0000',
         background: '#111111'
     }
+    let loopIntervalId = undefined;
 
     const $canvas = document.createElement("canvas");
     const context = $canvas.getContext('2d');
@@ -105,6 +106,10 @@ const Snake = function(options){
         $canvas.addEventListener("keydown", inputHandler);
     }
     const start = function(){
+        //clear snake array if it already exists
+        if (snake.body.length > 0){
+            snake.body = [];
+        }
         //places the snake in the middle of the grid
         let startX = Math.floor(0.5 * grid.width) + (grid.width % 2);
         let startY = Math.floor(0.5 * grid.height) + (grid.height % 2);
@@ -114,9 +119,12 @@ const Snake = function(options){
         //place the first apple
         apple.randomize();
         //set the game loop
+        loopIntervalId = window.setInterval(loop, 300);
     }
     const stop = function(){
         console.log("game stopped");
+        window.clearInterval(loopIntervalId);
+        window.setTimeout(start,1000);
     }
     const update = function(){
         let headIndex = snake.body[0];
@@ -198,12 +206,11 @@ const Snake = function(options){
     const loop = function(){
         update();
         draw();
-        console.log(snake.body);
     }
     const debug = function(){
         start();
-        draw();
-        window.setInterval(loop,300);
+        //draw();
+        //window.setInterval(loop,300);
     }
 
     setup();
