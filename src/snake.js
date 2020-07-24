@@ -237,14 +237,7 @@ const Snake = function(options){
         update();
         draw();
     }
-    const debug = function(){
-        //start();
-    }
 
     setup();
     reset();
-
-    return {
-        debug
-    }
 };
