@@ -1,6 +1,6 @@
 # Snake
 
-A simple Snake game made from scratch using Javascript. The aim of this project is to practice programming and Git by creating something presentable. Every feedback is appreciated.
+A simple Snake game made from scratch using Javascript. The aim of this project is to practice programming and Git by creating something presentable, easy to use and customizable. Every feedback is appreciated.
 
 ## Setup
 
