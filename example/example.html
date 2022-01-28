@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snake-JS Example</title>
+  <script type="text/javascript" src="../src/snake.js"></script>
+  <style>
+    body {
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="main">
+    <h1>Snake game example</h1>
+  </div>
+  <script>
+    const options = {
+      size: 50,
+      columns: 20,
+      rows: 15,
+      wrap: false
+    }
+    Snake(options)
+  </script>
+  <div id="footer">
+    <p>Made with love to practice Javascript</p>
+  </div>
+</body>
+
+</html>
